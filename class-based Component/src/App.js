@@ -1,9 +1,9 @@
-import Users from './components/Users';
+import UserFinder from "./components/UserFinder.js";
 
 function App() {
   return (
     <div>
-      <Users />
+      <UserFinder />
     </div>
   );
 }
