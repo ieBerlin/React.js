@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import Places from "./components/Places.jsx";
 import { AVAILABLE_PLACES } from "./data.js";
@@ -10,7 +10,7 @@ function App() {
   const selectedPlace = useRef();
   const [pickedPlaces, setPickedPlaces] = useState([]);
   const [availabalePlaces, setAvailablePlaces] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     const storedPlaces = storedIds.map((id) =>
@@ -21,7 +21,6 @@ function App() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log("1");
       const sortedPlaces = sortPlacesByDistance(
         AVAILABLE_PLACES,
         position.coords.latitude,
@@ -32,12 +31,12 @@ function App() {
   }, []);
 
   function handleStartRemovePlace(id) {
-    setIsOpen(true);
+    setIsModalOpen(true);
     selectedPlace.current = id;
   }
 
   function handleStopRemovePlace() {
-    setIsOpen(false);
+    setIsModalOpen(false);
   }
 
   function handleSelectPlace(id) {
@@ -57,22 +56,23 @@ function App() {
     }
   }
 
-  function handleRemovePlace() {
+  const handleRemovePlace = useCallback(function handleRemovePlace() {
+    console.log("Hello World!");
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
-    setIsOpen(false);
+    setIsModalOpen(false);
     const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     console.log(storedIds);
     localStorage.setItem(
       "selectedPlaces",
       JSON.stringify(storedIds.filter((id) => id !== selectedPlace.current))
     );
-  }
+  }, []);
 
   return (
     <>
-      <Modal open={isOpen}>
+      <Modal open={isModalOpen} onClose={handleStopRemovePlace}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
           onConfirm={handleRemovePlace}
