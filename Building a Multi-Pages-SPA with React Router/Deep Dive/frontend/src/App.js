@@ -2,12 +2,13 @@
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import EventsPage from "./pages/EventsPage";
+import EventsPage, { loader as eventsLoader } from "./pages/EventsPage";
 import NewEventPage from "./pages/NewEventPage";
 import EventDetailPage from "./pages/EventDetailPage";
 import EditEventPage from "./pages/EditEventPage";
 import RootLayout from "./pages/Root";
 import RootEvents from "./pages/Events";
+import Error from "./pages/Error";
 
 // 1. Add five new (dummy) page components (content can be simple <h1> elements)
 //    - HomePage
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    errorElement: <h1>Error occured</h1>,
+    errorElement: <Error />,
     children: [
       {
         index: true,
@@ -41,6 +42,8 @@ const router = createBrowserRouter([
       {
         path: "events",
         element: <RootEvents />,
+        id: "events",
+        loader: eventsLoader,
         children: [
           {
             index: true,
