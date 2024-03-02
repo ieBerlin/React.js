@@ -1,4 +1,4 @@
-import { useRouteLoaderData } from "react-router-dom";
+import { json, useRouteLoaderData } from "react-router-dom";
 import EventsList from "../components/EventsList";
 
 function EventsPage() {
@@ -15,6 +15,15 @@ export async function loader() {
   console.log("laoded method has been called!");
   const response = await fetch("http://localhost:8080/events");
   if (!response.ok) {
+    console.log("thrown");
+    throw json(
+      {
+        message: "Couldn't fech the data ",
+      },
+      {
+        status: 500,
+      }
+    );
   } else {
     const resData = await response.json();
     return resData.events;
