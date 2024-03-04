@@ -12,7 +12,6 @@ function EventsPage() {
 
 export default EventsPage;
 export async function loader() {
-  console.log("laoded method has been called!");
   const response = await fetch("http://localhost:8080/events");
   if (!response.ok) {
     console.log("thrown");
